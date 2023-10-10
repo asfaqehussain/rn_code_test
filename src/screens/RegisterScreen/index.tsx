@@ -7,14 +7,22 @@ import {
   Button,
   TouchableOpacity,
 } from 'react-native';
-import {useAppContext} from '../../context';
+
+import {useDispatch, useSelector} from 'react-redux';
+import {updateFormData} from '../../redux/actions';
 
 export default function RegisterScreen() {
-  const {formData, updateFormData} = useAppContext();
+  const formData = useSelector(state => state.form);
+  const dispatch = useDispatch();
+
+  //Redux implementation to dispatch the field values to global store
+  const handleInputChange = (field, value) => {
+    dispatch(updateFormData({[field]: value}));
+  };
 
   const handleSubmit = () => {
     // Perform the action with the data
-    console.log(' Formdata --->', formData);
+    console.log('Redux Formdata --->', formData);
   };
 
   return (
@@ -23,35 +31,37 @@ export default function RegisterScreen() {
         <Text style={styles.text}>First Name</Text>
         <TextInput
           style={styles.textInput}
-          onChangeText={text => updateFormData('firstName', text)}
+          onChangeText={text => handleInputChange('firstName', text)}
           value={formData.firstName}
         />
 
         <Text style={styles.text}>Last Name</Text>
         <TextInput
           style={styles.textInput}
-          onChangeText={text => updateFormData('lastName', text)}
+          onChangeText={text => handleInputChange('lastName', text)}
           value={formData.lastName}
         />
 
         <Text style={styles.text}>Email</Text>
         <TextInput
+          inputMode="email"
           style={styles.textInput}
-          onChangeText={text => updateFormData('email', text)}
+          onChangeText={text => handleInputChange('email', text)}
           value={formData.email}
         />
 
         <Text style={styles.text}>Phone Number</Text>
         <TextInput
+          inputMode="numeric"
           style={styles.textInput}
-          onChangeText={text => updateFormData('phoneNumber', text)}
+          onChangeText={text => handleInputChange('phoneNumber', text)}
           value={formData.phoneNumber}
         />
 
         <Text style={styles.text}>Address</Text>
         <TextInput
           style={styles.textInput}
-          onChangeText={text => updateFormData('address', text)}
+          onChangeText={text => handleInputChange('address', text)}
           value={formData.address}
         />
         <TouchableOpacity onPress={handleSubmit} style={styles.button}>
